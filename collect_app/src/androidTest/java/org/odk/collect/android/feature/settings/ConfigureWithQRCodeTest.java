@@ -51,7 +51,7 @@ public class ConfigureWithQRCodeTest {
     @Rule
     public RuleChain copyFormChain = RuleChain
             .outerRule(GrantPermissionRule.grant(
-                    Manifest.permission.READ_PHONE_STATE,
+                    Manifest.permission.READ_PHONE_NUMBERS,
                     Manifest.permission.CAMERA
             ))
             .around(new ResetStateRule(new AppDependencyModule() {

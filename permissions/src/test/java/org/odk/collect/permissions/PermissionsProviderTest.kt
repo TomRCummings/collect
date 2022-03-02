@@ -111,21 +111,21 @@ class PermissionsProviderTest {
     }
 
     @Test
-    fun `When read phone state permission granted should isReadPhoneStatePermissionGranted() return true`() {
-        whenever(permissionsChecker.isPermissionGranted(Manifest.permission.READ_PHONE_STATE)).thenReturn(
+    fun `When read phone numbers permission granted should isReadPhoneStatePermissionGranted() return true`() {
+        whenever(permissionsChecker.isPermissionGranted(Manifest.permission.READ_PHONE_NUMBERS)).thenReturn(
             true
         )
 
-        assertThat(permissionsProvider.isReadPhoneStatePermissionGranted, `is`(true))
+        assertThat(permissionsProvider.isReadPhoneStatePermissionGranted(), `is`(true))
     }
 
     @Test
     fun `When read phone state permission not granted should isReadPhoneStatePermissionGranted() return false`() {
-        whenever(permissionsChecker.isPermissionGranted(Manifest.permission.READ_PHONE_STATE)).thenReturn(
+        whenever(permissionsChecker.isPermissionGranted(Manifest.permission.READ_PHONE_NUMBERS)).thenReturn(
             false
         )
 
-        assertThat(permissionsProvider.isReadPhoneStatePermissionGranted, `is`(false))
+        assertThat(permissionsProvider.isReadPhoneStatePermissionGranted(), `is`(false))
     }
 
     @Test

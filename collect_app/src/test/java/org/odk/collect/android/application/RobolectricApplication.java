@@ -39,7 +39,7 @@ public class RobolectricApplication extends Collect {
         shadowApplication.grantPermissions("android.permission.ACCESS_COARSE_LOCATION");
         shadowApplication.grantPermissions("android.permission.READ_EXTERNAL_STORAGE");
         shadowApplication.grantPermissions("android.permission.CAMERA");
-        shadowApplication.grantPermissions("android.permission.READ_PHONE_STATE");
+        shadowApplication.grantPermissions("android.permission.READ_PHONE_NUMBERS");
         shadowApplication.grantPermissions("android.permission.RECORD_AUDIO");
         shadowApplication.grantPermissions("android.permission.GET_ACCOUNTS");
 

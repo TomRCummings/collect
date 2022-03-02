@@ -28,7 +28,7 @@ public class AboutPageTest {
 
     @Rule
     public RuleChain ruleChain = TestRuleChain.chain()
-            .around(GrantPermissionRule.grant(Manifest.permission.READ_PHONE_STATE))
+            .around(GrantPermissionRule.grant(Manifest.permission.READ_PHONE_NUMBERS))
             .around(rule);
 
     @Test
