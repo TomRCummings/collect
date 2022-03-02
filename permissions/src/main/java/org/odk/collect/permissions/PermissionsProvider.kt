@@ -8,6 +8,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.location.LocationManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
@@ -51,8 +52,12 @@ open class PermissionsProvider(private val permissionsChecker: PermissionsChecke
     val isGetAccountsPermissionGranted: Boolean
         get() = permissionsChecker.isPermissionGranted(Manifest.permission.GET_ACCOUNTS)
 
-    open val isReadPhoneStatePermissionGranted: Boolean
-        get() = permissionsChecker.isPermissionGranted(Manifest.permission.READ_PHONE_STATE)
+    open fun isReadPhoneStatePermissionGranted(): Boolean {
+        return if (Build.VERSION.SDK_INT < 30)
+            permissionsChecker.isPermissionGranted(Manifest.permission.READ_PHONE_STATE)
+        else
+            permissionsChecker.isPermissionGranted(Manifest.permission.READ_PHONE_NUMBERS)
+    }
 
     open fun requestReadStoragePermission(activity: Activity, action: PermissionListener) {
         requestPermissions(
@@ -226,29 +231,55 @@ open class PermissionsProvider(private val permissionsChecker: PermissionsChecke
         displayPermissionDeniedDialog: Boolean,
         action: PermissionListener
     ) {
-        requestPermissions(
-            activity,
-            object : PermissionListener {
-                override fun granted() {
-                    action.granted()
-                }
+        if (Build.VERSION.SDK_INT < 30) {
+            requestPermissions(
+                    activity,
+                    object : PermissionListener {
+                        override fun granted() {
+                            action.granted()
+                        }
 
-                override fun denied() {
-                    if (displayPermissionDeniedDialog) {
-                        showAdditionalExplanation(
-                            activity,
-                            R.string.read_phone_state_runtime_permission_denied_title,
-                            R.string.read_phone_state_runtime_permission_denied_desc,
-                            R.drawable.ic_phone,
-                            action
-                        )
-                    } else {
-                        action.denied()
-                    }
-                }
-            },
-            Manifest.permission.READ_PHONE_STATE
-        )
+                        override fun denied() {
+                            if (displayPermissionDeniedDialog) {
+                                showAdditionalExplanation(
+                                        activity,
+                                        R.string.read_phone_state_runtime_permission_denied_title,
+                                        R.string.read_phone_state_runtime_permission_denied_desc,
+                                        R.drawable.ic_phone,
+                                        action
+                                )
+                            } else {
+                                action.denied()
+                            }
+                        }
+                    },
+                    Manifest.permission.READ_PHONE_STATE
+            )
+        } else {
+            requestPermissions(
+                    activity,
+                    object : PermissionListener {
+                        override fun granted() {
+                            action.granted()
+                        }
+
+                        override fun denied() {
+                            if (displayPermissionDeniedDialog) {
+                                showAdditionalExplanation(
+                                        activity,
+                                        R.string.read_phone_state_runtime_permission_denied_title,
+                                        R.string.read_phone_state_runtime_permission_denied_desc,
+                                        R.drawable.ic_phone,
+                                        action
+                                )
+                            } else {
+                                action.denied()
+                            }
+                        }
+                    },
+                    Manifest.permission.READ_PHONE_NUMBERS
+            )
+        }
     }
 
     protected open fun requestPermissions(
