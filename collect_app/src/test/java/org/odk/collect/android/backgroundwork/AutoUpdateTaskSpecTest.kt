@@ -4,13 +4,15 @@ import android.app.Application
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.CoreMatchers.nullValue
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.odk.collect.analytics.Analytics
-import org.odk.collect.android.backgroundwork.AutoUpdateTaskSpec.DATA_PROJECT_ID
 import org.odk.collect.android.formmanagement.FormSourceProvider
 import org.odk.collect.android.formmanagement.FormsUpdater
 import org.odk.collect.android.formmanagement.matchexactly.SyncStatusAppState
@@ -43,7 +45,7 @@ class AutoUpdateTaskSpecTest {
                 syncStatusAppState: SyncStatusAppState,
                 instancesRepositoryProvider: InstancesRepositoryProvider,
                 changeLockProvider: ChangeLockProvider
-            ): FormsUpdater? {
+            ): FormsUpdater {
                 return formUpdateChecker
             }
         })
@@ -52,9 +54,14 @@ class AutoUpdateTaskSpecTest {
     @Test
     fun `calls checkForUpdates with project from tag`() {
         val autoUpdateTaskSpec = AutoUpdateTaskSpec()
-        val task = autoUpdateTaskSpec.getTask(context, mapOf(DATA_PROJECT_ID to "projectId"))
+        val task = autoUpdateTaskSpec.getTask(context, mapOf(TaskData.DATA_PROJECT_ID to "projectId"), true)
 
         task.get()
         verify(formUpdateChecker).downloadUpdates("projectId")
+    }
+
+    @Test
+    fun `maxRetries should not be limited`() {
+        assertThat(AutoUpdateTaskSpec().maxRetries, `is`(nullValue()))
     }
 }
